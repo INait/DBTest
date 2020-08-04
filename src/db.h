@@ -19,6 +19,8 @@ namespace DBProject
 
 		template<typename ... T>
 		void insertToTable(const std::string& name, T... values);
+
+		void executeQuery(const std::string& rawQuery);
 	private:
 
 		std::unordered_map<std::string, std::unique_ptr<TableInterface>> mTables;
