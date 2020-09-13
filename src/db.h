@@ -13,41 +13,18 @@ namespace DBProject
 	{
 	public:
 		DB();
+		DB(const DB&) = delete;
+		DB& operator=(const DB&) = delete;
 
-		template<typename ... T>
-		void createTable(const std::string& name, const std::initializer_list<std::string>& columnNames);
+		void createTable(const std::string& name, std::vector<std::unique_ptr<Table::Column>>& columns);
 
-		template<typename ... T>
-		void insertToTable(const std::string& name, T... values);
+		void insertToTable(const std::string& name, std::vector<std::unique_ptr<Table::InsertionData>>& values);
 
 		void executeQuery(const std::string& rawQuery);
 	private:
 
-		std::unordered_map<std::string, std::unique_ptr<TableInterface>> mTables;
+		std::unordered_map<std::string, std::unique_ptr<Table>> mTables;
 	};
 
-	template<typename ...T>
-	inline void DB::createTable(const std::string& name, const std::initializer_list<std::string>& columnNames)
-	{
-		auto table = std::make_unique<Table<T...>>(columnNames);
-		mTables[name] = std::unique_ptr<TableInterface>(static_cast<TableInterface*>(table.release()));
-	}
-
-	template<typename ...T>
-	inline void DB::insertToTable(const std::string& name, T ...values)
-	{
-		auto tableSearched = mTables.find(name);
-		if (tableSearched == mTables.end())
-		{
-			std::cout << "Table `" << name << "` not found" << std::endl;
-		}
-
-		auto table = tableSearched->second.get();
-		if (auto castTable = dynamic_cast<Table<T...>*>(table))
-		{
-			castTable->insert(values...);
-		}
-
-	}
 };
 
