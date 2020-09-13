@@ -48,8 +48,10 @@ namespace DBProject
 			std::unique_ptr<Type> data;
 		};
 
-		void AddColumn(const std::string& name, Type::TypeName type, std::unique_ptr<Type> defaultValue);
-		void InsertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData);
+		void addColumn(const std::string& name, Type::TypeName type, std::unique_ptr<Type> defaultValue);
+		void insertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData);
+
+		std::string getColumnType(const std::string& columnName) const;
 	private:
 		std::vector<std::unique_ptr<Column>> mColumns;
 		std::vector<Row> mRows;

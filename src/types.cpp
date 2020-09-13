@@ -25,6 +25,23 @@ namespace DBProject
 		return  Type::TypeName::Void;
 	}
 
+	std::string getStringFromType(Type::TypeName type)
+	{
+		switch (type)
+		{
+		case Type::TypeName::Int:
+			return "INT";
+		case Type::TypeName::Uint:
+			return "UINT";
+		case Type::TypeName::String:
+			return "STRING";
+		case Type::TypeName::Bool:
+			return "BOOL";
+		case Type::TypeName::Void:
+			return "VOID";
+		}
+	}
+
 	std::unique_ptr<Type> createTypedObject(const std::string& typeName, const std::string& valueStr)
 	{
 		Type::TypeName type = getTypeFromString(typeName);

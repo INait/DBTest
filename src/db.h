@@ -3,7 +3,6 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
-#include <iostream>
 
 #include "dbTable.h"
 
@@ -21,6 +20,8 @@ namespace DBProject
 		void insertToTable(const std::string& name, std::vector<std::unique_ptr<Table::InsertionData>>& values);
 
 		void executeQuery(const std::string& rawQuery);
+
+		const Table* getTable(const std::string& name) const;
 	private:
 
 		std::unordered_map<std::string, std::unique_ptr<Table>> mTables;

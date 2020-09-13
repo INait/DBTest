@@ -95,6 +95,8 @@ namespace DBProject
 	};
 
 	Type::TypeName getTypeFromString(const std::string& typeName);
+	std::string getStringFromType(Type::TypeName type);
+
 	std::unique_ptr<Type> createTypedObject(const std::string& typeName, const std::string& valueStr);
 };
 

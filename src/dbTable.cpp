@@ -2,7 +2,7 @@
 
 namespace DBProject
 {
-void Table::AddColumn(const std::string& name, Type::TypeName type, std::unique_ptr<Type> defaultValue)
+void Table::addColumn(const std::string& name, Type::TypeName type, std::unique_ptr<Type> defaultValue)
 {
 	mColumns.push_back(std::make_unique<Column>(name, type, std::move(defaultValue)));
 
@@ -13,7 +13,7 @@ void Table::AddColumn(const std::string& name, Type::TypeName type, std::unique_
 	}
 }
 
-void Table::InsertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData)
+void Table::insertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData)
 {
 	mRows.push_back({});
 	auto& newRow = mRows.back();
@@ -37,5 +37,17 @@ void Table::InsertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData
 			newRow[colIndex] = std::move(insertionUnit->data);
 		}
 	}
+}
+std::string Table::getColumnType(const std::string& columnName) const
+{
+	for (auto&& column : mColumns)
+	{
+		if (column->name == columnName)
+		{
+			return getStringFromType(column->type);
+		}
+	}
+
+	return "VOID";
 }
 }
