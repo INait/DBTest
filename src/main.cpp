@@ -1,9 +1,11 @@
 
 #include "db.h"
+#include "server.h"
 
 int main()
 {
 	using namespace DBProject;
+	using namespace boost::asio;
 
 	DB db;
 
@@ -13,6 +15,12 @@ int main()
 
 	// TODO make work 'New York' strings
 	//db.executeQuery("INSERT INTO donors (ID, City, State, IsTeacher, Value) VALUES (1, 'New York', 'New York', true, 100);");
+
+		// Initialise the server.
+	Server s("0.0.0.0", "80", ".");
+
+	// Run the server until stopped.
+	s.run();
 
 	return 0;
 }

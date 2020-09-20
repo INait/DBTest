@@ -38,6 +38,7 @@ namespace DBProject
 		case Type::TypeName::Bool:
 			return "BOOL";
 		case Type::TypeName::Void:
+		default:
 			return "VOID";
 		}
 	}
