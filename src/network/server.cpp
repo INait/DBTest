@@ -8,6 +8,8 @@ namespace DBProject
         : io_context_(1)
         , signals_(io_context_)
         , acceptor_(io_context_)
+        , connection_manager_()
+        , request_handler_(doc_root)
     {
         // Register to handle the signals that indicate when the server should exit.
         // It is safe to register for the same signal multiple times in a program,
@@ -55,7 +57,8 @@ namespace DBProject
 
             if (!ec)
             {
-                // TODO: Store connection here
+                connection_manager_.start(std::make_shared<Connection>(
+                    std::move(socket), connection_manager_, request_handler_));
             }
 
             do_accept();
@@ -71,6 +74,7 @@ namespace DBProject
             // operations. Once all operations have finished the io_context::run()
             // call will exit.
             acceptor_.close();
+            connection_manager_.stop_all();
         });
     }
 }

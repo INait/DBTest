@@ -9,6 +9,8 @@ project(DBTestProject)
 file(GLOB SOURCES 
 	"src/*.cpp"
 	"src/*.h"
+	"src/network/*.cpp"
+	"src/network/*.h"
 )
 
 SET(Boost_USE_STATIC_LIBS ON)

@@ -1,6 +1,6 @@
 
 #include "db.h"
-#include "server.h"
+#include "network/server.h"
 
 int main()
 {
@@ -17,7 +17,7 @@ int main()
 	//db.executeQuery("INSERT INTO donors (ID, City, State, IsTeacher, Value) VALUES (1, 'New York', 'New York', true, 100);");
 
 		// Initialise the server.
-	Server s("0.0.0.0", "80", ".");
+	Server s("0.0.0.0", "8080", ".");
 
 	// Run the server until stopped.
 	s.run();

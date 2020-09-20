@@ -5,6 +5,8 @@
 
 #include <boost/asio.hpp>
 
+#include "connectionManager.h"
+
 namespace DBProject
 {
 	class Server
@@ -36,6 +38,12 @@ namespace DBProject
 
 		/// Acceptor used to listen for incoming connections.
 		boost::asio::ip::tcp::acceptor acceptor_;
+
+		/// The connection manager which owns all live connections.
+		ConnectionManager connection_manager_;
+
+		/// The handler for all incoming requests.
+		RequestHandler request_handler_;
 	};
 };
 
