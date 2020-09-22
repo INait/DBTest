@@ -41,7 +41,7 @@ namespace DBProject
                 }
                 else if (result == RequestParser::bad)
                 {
-                    reply_ = Reply::stock_reply();
+                    reply_ = Reply::stock_reply(Reply::StatusType::bad_request);
                     do_write();
                 }
                 else
