@@ -5,7 +5,8 @@
 
 #include <boost/asio.hpp>
 
-#include "connectionManager.h"
+#include "db.h"
+#include "network/connectionManager.h"
 
 namespace DBProject
 {
@@ -19,6 +20,12 @@ namespace DBProject
 		/// serve up files from the given directory.
 		explicit Server(const std::string& address, const std::string& port,
 			const std::string& doc_root);
+
+		/// Construct the server to listen on the specified TCP address and port, and
+		/// process sql queries to a DB
+		explicit Server(const std::string& address, const std::string& port, DB& db);
+
+		void init(const std::string& address, const std::string& port);
 
 		/// Run the server's io_context loop.
 		void run();
@@ -43,7 +50,7 @@ namespace DBProject
 		ConnectionManager connection_manager_;
 
 		/// The handler for all incoming requests.
-		RequestHandler request_handler_;
+		std::unique_ptr<RequestHandler> request_handler_;
 	};
 };
 

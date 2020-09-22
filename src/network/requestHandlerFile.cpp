@@ -3,19 +3,19 @@
 #include <sstream>
 #include <string>
 
-#include "requestHandler.h"
+#include "requestHandlerFile.h"
 #include "mimeTypes.h"
 #include "request.h"
 #include "reply.h"
 
 namespace DBProject
 {
-    RequestHandler::RequestHandler(const std::string& doc_root)
+    RequestHandlerFile::RequestHandlerFile(const std::string& doc_root)
         : doc_root_(doc_root)
     {
     }
 
-    void RequestHandler::handle_request(const Request& req, Reply& rep)
+    void RequestHandlerFile::handle_request(const Request& req, Reply& rep)
     {
         // Decode url to path.
         std::string request_path;
@@ -69,7 +69,7 @@ namespace DBProject
         rep.headers[1].value = MimeTypes::extension_to_type(extension);
     }
 
-    bool RequestHandler::url_decode(const std::string& in, std::string& out)
+    bool RequestHandlerFile::url_decode(const std::string& in, std::string& out)
     {
         out.clear();
         out.reserve(in.size());

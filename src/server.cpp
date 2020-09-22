@@ -1,4 +1,7 @@
 
+#include "network/requestHandlerFile.h"
+#include "dbRequestHandler.h"
+
 #include "server.h"
 
 namespace DBProject
@@ -9,7 +12,22 @@ namespace DBProject
         , signals_(io_context_)
         , acceptor_(io_context_)
         , connection_manager_()
-        , request_handler_(doc_root)
+        , request_handler_(std::make_unique<RequestHandlerFile>(doc_root))
+    {
+        init(address, port);
+    }
+
+    Server::Server(const std::string& address, const std::string& port, DB& db)
+        : io_context_(1)
+        , signals_(io_context_)
+        , acceptor_(io_context_)
+        , connection_manager_()
+        , request_handler_(std::make_unique<RequestHandlerDB>(db))
+    {
+        init(address, port);
+    }
+
+    void Server::init(const std::string& address, const std::string& port)
     {
         // Register to handle the signals that indicate when the server should exit.
         // It is safe to register for the same signal multiple times in a program,
@@ -58,7 +76,7 @@ namespace DBProject
             if (!ec)
             {
                 connection_manager_.start(std::make_shared<Connection>(
-                    std::move(socket), connection_manager_, request_handler_));
+                    std::move(socket), connection_manager_, *request_handler_));
             }
 
             do_accept();
