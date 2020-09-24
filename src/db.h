@@ -11,7 +11,7 @@ namespace DBProject
 	class DB
 	{
 	public:
-		DB();
+		DB() = default;
 		DB(const DB&) = delete;
 		DB& operator=(const DB&) = delete;
 
@@ -19,7 +19,7 @@ namespace DBProject
 
 		void insertToTable(const std::string& name, std::vector<std::unique_ptr<Table::InsertionData>>& values);
 
-		void executeQuery(const std::string& rawQuery);
+		std::unique_ptr<Table> executeQuery(const std::string& rawQuery);
 
 		const Table* getTable(const std::string& name) const;
 	private:

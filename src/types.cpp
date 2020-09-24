@@ -1,4 +1,5 @@
 
+#include <sstream>
 #include "types.h"
 
 namespace DBProject
@@ -78,9 +79,16 @@ namespace DBProject
 
 	std::unique_ptr<Type> IntType::clone() const
 	{
-		auto result = std::unique_ptr<IntType>();
+		auto result = std::make_unique<IntType>();
 		result->mValue = mValue;
 		return result;
+	}
+
+	std::string IntType::getValue() const
+	{
+		std::stringstream ss;
+		ss << mValue;
+		return ss.str();
 	}
 
 	void UintType::parseValue(const std::string& valueStr)
@@ -90,9 +98,22 @@ namespace DBProject
 
 	std::unique_ptr<Type> UintType::clone() const
 	{
-		auto result = std::unique_ptr<UintType>();
+		auto result = std::make_unique<UintType>();
 		result->mValue = mValue;
 		return result;
+	}
+
+	std::string UintType::getValue() const
+	{
+		std::stringstream ss;
+		ss << mValue;
+		return ss.str();
+	}
+
+	StringType::StringType(const std::string& valueStr)
+		: StringType()
+	{
+		parseValue(valueStr);
 	}
 
 	void StringType::parseValue(const std::string& valueStr)
@@ -102,9 +123,14 @@ namespace DBProject
 
 	std::unique_ptr<Type> StringType::clone() const
 	{
-		auto result = std::unique_ptr<StringType>();
+		auto result = std::make_unique<StringType>();
 		result->mValue = mValue;
 		return result;
+	}
+
+	std::string StringType::getValue() const
+	{
+		return mValue;
 	}
 
 	void BoolType::parseValue(const std::string& valueStr)
@@ -120,13 +146,28 @@ namespace DBProject
 	}
 	std::unique_ptr<Type> BoolType::clone() const
 	{
-		auto result = std::unique_ptr<BoolType>();
+		auto result = std::make_unique<BoolType>();
 		result->mValue = mValue;
 		return result;
 	}
+	std::string BoolType::getValue() const
+	{
+		if (mValue == true)
+		{
+			return "true";
+		}
+		else
+		{
+			return "false";
+		}
+	}
 	std::unique_ptr<Type> VoidType::clone() const
 	{
-		auto result = std::unique_ptr<VoidType>();
+		auto result = std::make_unique<VoidType>();
 		return result;
+	}
+	std::string VoidType::getValue() const
+	{
+		return "";
 	}
 }

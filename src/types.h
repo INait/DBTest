@@ -24,6 +24,8 @@ namespace DBProject
 		virtual void parseValue(const std::string& valueStr) = 0;
 		virtual std::unique_ptr<Type> clone() const = 0;
 
+		virtual std::string getValue() const = 0;
+
 	protected:
 		TypeName mTypeName = TypeName::Void;
 	};
@@ -37,6 +39,7 @@ namespace DBProject
 
 		void parseValue(const std::string& valueStr) override;
 		std::unique_ptr<Type> clone() const override;
+		std::string getValue() const override;
 	private:
 		int32_t mValue = int32_t{};
 	};
@@ -50,6 +53,7 @@ namespace DBProject
 
 		void parseValue(const std::string& valueStr) override;
 		std::unique_ptr<Type> clone() const override;
+		std::string getValue() const override;
 
 	private:
 		uint32_t mValue = uint32_t{};
@@ -62,8 +66,11 @@ namespace DBProject
 			: Type(TypeName::String)
 		{}
 
+		StringType(const std::string& valueStr);
+
 		void parseValue(const std::string& valueStr) override;
 		std::unique_ptr<Type> clone() const override;
+		std::string getValue() const override;
 
 	private:
 		std::string mValue = std::string{};
@@ -78,6 +85,7 @@ namespace DBProject
 
 		void parseValue(const std::string& valueStr) override;
 		std::unique_ptr<Type> clone() const override;
+		std::string getValue() const override;
 
 	private:
 		bool mValue = false;
@@ -92,6 +100,7 @@ namespace DBProject
 
 		void parseValue(const std::string& valueStr) override {};
 		std::unique_ptr<Type> clone() const override;
+		std::string getValue() const override;
 	};
 
 	Type::TypeName getTypeFromString(const std::string& typeName);

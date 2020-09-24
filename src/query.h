@@ -12,7 +12,9 @@ namespace DBProject
 		{
 			Invalid,
 			Create,
-			Insert
+			Insert,
+			Select,
+			Delete
 		};
 
 		enum class Object

@@ -14,6 +14,8 @@ namespace DBProject
 		Table() = default;
 		~Table() = default;
 
+		explicit Table(const std::string& singleValue);
+
 		Table(const Table&) = delete;
 		Table& operator=(const Table&) = delete;
 
@@ -28,6 +30,8 @@ namespace DBProject
 
 			Column(const Column&) = delete;
 			Column& operator=(const Column&) = delete;
+
+			std::unique_ptr<Column> clone() const;
 
 			std::string name;
 			Type::TypeName type;
@@ -48,10 +52,18 @@ namespace DBProject
 			std::unique_ptr<Type> data;
 		};
 
+		void addColumn(std::unique_ptr<Column> column);
 		void addColumn(const std::string& name, Type::TypeName type, std::unique_ptr<Type> defaultValue);
 		void insertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData);
 
 		std::string getColumnType(const std::string& columnName) const;
+		const std::unique_ptr<Column>& getColumn(const std::string& columnName) const;
+
+		std::string toString() const;
+
+		const std::vector<std::unique_ptr<Column>>& getAllColumns() const;
+		const std::vector<Row>& getAllRows() const;
+
 	private:
 		std::vector<std::unique_ptr<Column>> mColumns;
 		std::vector<Row> mRows;

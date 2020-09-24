@@ -15,6 +15,7 @@ int main()
 
 	// TODO make work 'New York' strings
 	//db.executeQuery("INSERT INTO donors (ID, City, State, IsTeacher, Value) VALUES (1, 'New York', 'New York', true, 100);");
+	//db.executeQuery("SELECT ID, City FROM donors");
 
 		// Initialise the server.
 	Server s("0.0.0.0", "8080", db);
