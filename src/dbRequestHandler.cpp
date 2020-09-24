@@ -13,7 +13,7 @@ namespace DBProject
 {
     namespace
     {
-        static constexpr char DefaultResult[] = "Query executed";
+        static constexpr char DefaultResult[] = "Bad request";
     }
 
     void RequestHandlerDB::handle_request(const Request& req, Reply& rep)
@@ -21,14 +21,25 @@ namespace DBProject
         std::string result = DefaultResult;
 
         std::string decodedUri = req.uri;
- 
-        decodedUri = std::regex_replace(decodedUri, std::regex("/"), "");
-        decodedUri = std::regex_replace(decodedUri, std::regex("%20"), " ");
 
-        auto queryResult = db.executeQuery(decodedUri);
-        if (queryResult)
+        auto slashIdx = decodedUri.find("/");
+        auto questionMarkIdx = decodedUri.find("?");
+        auto requestString = decodedUri.substr(slashIdx + 1, questionMarkIdx - 1);
+        if (requestString == "query")
         {
-            result = queryResult->toString();
+            auto equalSignIdx = decodedUri.find_first_of("=");
+            auto firstParam = decodedUri.substr(questionMarkIdx + 1, equalSignIdx - questionMarkIdx - 1);
+            if (firstParam == "sql")
+            {
+                decodedUri = decodedUri.substr(equalSignIdx + 1);
+                decodedUri = std::regex_replace(decodedUri, std::regex("%20"), " ");
+
+                auto queryResult = db.executeQuery(decodedUri);
+                if (queryResult)
+                {
+                    result = queryResult->toString();
+                }
+            }
         }
 
         std::stringstream ss;
