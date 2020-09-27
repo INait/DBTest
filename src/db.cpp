@@ -1,4 +1,6 @@
 
+#include <algorithm>
+
 #include "dbTable.h"
 #include "query.h"
 #include "db.h"

@@ -2,10 +2,10 @@
 
 #include <tuple>
 
+#include "request.h"
+
 namespace DBProject
 {
-    struct Request;
-
     /// Parser for incoming requests.
     class RequestParser
     {
