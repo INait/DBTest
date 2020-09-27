@@ -16,6 +16,7 @@ namespace DBProject
 		DB& operator=(const DB&) = delete;
 
 		void createTable(const std::string& name, std::vector<std::unique_ptr<Table::Column>>& columns);
+		void importTableFromCSV(const std::string& name, const std::string& data);
 
 		void insertToTable(const std::string& name, std::vector<std::unique_ptr<Table::InsertionData>>& values);
 

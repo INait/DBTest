@@ -27,13 +27,28 @@ namespace DBProject
         std::tuple<result_type, InputIterator> parse(Request& req,
             InputIterator begin, InputIterator end)
         {
+            // if already good
+            if (result_ == good)
+            {
+                req.data.append(begin, end);
+                return std::make_tuple(result_, begin);
+            }
+
             while (begin != end)
             {
-                result_type result = consume(req, *begin++);
-                if (result == good || result == bad)
-                    return std::make_tuple(result, begin);
+                result_ = consume(req, *begin++);
+
+                if (result_ == good)
+                {
+                    req.data = std::string(begin, end);
+                }
+
+                if (result_ == good || result_ == bad)
+                {
+                    return std::make_tuple(result_, begin);
+                }
             }
-            return std::make_tuple(indeterminate, begin);
+            return std::make_tuple(result_, begin);
         }
 
     private:
@@ -76,6 +91,8 @@ namespace DBProject
             expecting_newline_2,
             expecting_newline_3
         } state_;
+
+        result_type result_;
     };
 
 };

@@ -25,6 +25,7 @@ namespace DBProject
     void Connection::do_read()
     {
         auto self(shared_from_this());
+
         socket_.async_read_some(boost::asio::buffer(buffer_),
             [this, self](boost::system::error_code ec, std::size_t bytes_transferred)
         {
@@ -34,15 +35,29 @@ namespace DBProject
                 std::tie(result, std::ignore) = request_parser_.parse(
                     request_, buffer_.data(), buffer_.data() + bytes_transferred);
 
-                if (result == RequestParser::good)
-                {
-                    request_handler_.handle_request(request_, reply_);
-                    do_write();
-                }
-                else if (result == RequestParser::bad)
+                if (result == RequestParser::bad)
                 {
                     reply_ = Reply::stock_reply(Reply::StatusType::bad_request);
                     do_write();
+                }
+                else if (result == RequestParser::good)
+                {
+                    auto contentLengthHeaderIt = std::find_if(request_.headers.begin(), request_.headers.end(), [](const Header& header)
+                    {
+                        return (header.name == "Content-Length");
+                    });
+
+                    uint32_t contentSize = atoi(contentLengthHeaderIt->value.c_str());
+
+                    if (request_.data.size() < contentSize)
+                    {
+                        do_read();
+                    }
+                    else
+                    {
+                        request_handler_.handle_request(request_, reply_);
+                        do_write();
+                    }
                 }
                 else
                 {

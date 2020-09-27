@@ -22,6 +22,20 @@ namespace DBProject
 		}
 	}
 
+	void DB::importTableFromCSV(const std::string& name, const std::string& data)
+	{
+		if (mTables.find(name) != mTables.end())
+		{
+			// assert table already exists
+			return;
+		}
+
+		mTables[name] = std::make_unique<Table>();
+		auto& table = mTables[name];
+
+		table->createFromCSV(data);
+	}
+
 	void DB::insertToTable(const std::string& name, std::vector<std::unique_ptr<Table::InsertionData>>& values)
 	{
 		if (mTables.find(name) == mTables.end())

@@ -15,7 +15,8 @@ namespace DBProject
           { "htm", "text/html" },
           { "html", "text/html" },
           { "jpg", "image/jpeg" },
-          { "png", "image/png" }
+          { "png", "image/png" },
+          { "plaintext", "text/plain" }
         };
 
         std::string extension_to_type(const std::string& extension)

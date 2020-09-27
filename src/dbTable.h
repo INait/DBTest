@@ -52,6 +52,8 @@ namespace DBProject
 			std::unique_ptr<Type> data;
 		};
 
+		void createFromCSV(const std::string& data);
+
 		void addColumn(std::unique_ptr<Column> column);
 		void addColumn(const std::string& name, Type::TypeName type, std::unique_ptr<Type> defaultValue);
 		void insertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData);

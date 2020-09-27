@@ -1,4 +1,5 @@
 
+#include <regex>
 #include <sstream>
 #include "dbTable.h"
 
@@ -13,6 +14,69 @@ Table::Table(const std::string& singleValue)
 	std::vector<std::unique_ptr<InsertionData>> data;
 	data.emplace_back(std::make_unique<InsertionData>(SingleValueColName, std::make_unique<StringType>(singleValue)));
 	insertRow(data);
+}
+
+void Table::createFromCSV(const std::string& data)
+{
+	mColumns.clear();
+	mRows.clear();
+
+	static const std::regex reNewLine("\n");
+	static const std::regex reComma(",");
+
+	std::sregex_token_iterator oneLine(data.begin(), data.end(), reNewLine, -1);
+	auto columnNamesLine = oneLine->str();
+	std::sregex_token_iterator columnNameIt(columnNamesLine.begin(), columnNamesLine.end(), reComma, -1);
+
+	++oneLine;
+	if (oneLine == std::sregex_token_iterator{})
+	{
+		return;
+	}
+
+	auto firstValuesLine = oneLine->str();
+	std::sregex_token_iterator firstValueIt(firstValuesLine.begin(), firstValuesLine.end(), reComma, -1);
+
+	std::vector<std::string> columnNames;
+	while (columnNameIt != std::sregex_token_iterator{})
+	{
+		auto type = determineType(firstValueIt->str());
+		auto defaultValue = createTypedObject(type, std::string{});
+
+		addColumn(columnNameIt->str(), type, std::move(defaultValue));
+		columnNames.push_back(columnNameIt->str());
+
+		++columnNameIt;
+		++firstValueIt;
+	}
+
+	while (oneLine != std::sregex_token_iterator{})
+	{
+		std::vector<std::unique_ptr<InsertionData>> insertionData;
+
+		auto valuesLine = oneLine->str();
+		std::sregex_token_iterator valueIt(valuesLine.begin(), valuesLine.end(), reComma, -1);
+
+		for (size_t index = 0; index < columnNames.size(); ++index)
+		{
+			auto valueStr = (valueIt != std::sregex_token_iterator{} ? valueIt->str() : std::string());
+
+			insertionData.emplace_back(std::make_unique<Table::InsertionData>(
+				columnNames[index],
+				createTypedObject(getColumnType(columnNames[index]), valueStr)
+				)
+			);
+
+			if (valueIt != std::sregex_token_iterator{})
+			{
+				++valueIt;
+			}
+		}
+
+		insertRow(insertionData);
+
+		++oneLine;
+	}
 }
 
 void Table::addColumn(std::unique_ptr<Column> column)

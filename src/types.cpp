@@ -44,9 +44,20 @@ namespace DBProject
 		}
 	}
 
+	Type::TypeName determineType(const std::string& typeName)
+	{
+		// TODO
+		return Type::TypeName::String;
+	}
+
 	std::unique_ptr<Type> createTypedObject(const std::string& typeName, const std::string& valueStr)
 	{
 		Type::TypeName type = getTypeFromString(typeName);
+		return createTypedObject(type, valueStr);
+	}
+
+	std::unique_ptr<Type> createTypedObject(Type::TypeName type, const std::string& valueStr)
+	{
 		std::unique_ptr<Type> result;
 
 		switch (type)
@@ -68,7 +79,11 @@ namespace DBProject
 			break;
 		}
 
-		result->parseValue(valueStr);
+		if (!valueStr.empty())
+		{
+			result->parseValue(valueStr);
+		}
+
 		return result;
 	}
 
