@@ -48,7 +48,7 @@ namespace DBProject
         RequestHandler& request_handler_;
 
         /// Buffer for incoming data.
-        std::array<char, 8192> buffer_;
+        std::array<char, 65536> buffer_;
 
         /// The incoming request.
         Request request_;

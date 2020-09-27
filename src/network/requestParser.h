@@ -92,7 +92,7 @@ namespace DBProject
             expecting_newline_3
         } state_;
 
-        result_type result_;
+        result_type result_ = indeterminate;
     };
 
 };
