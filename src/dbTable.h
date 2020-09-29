@@ -58,6 +58,7 @@ namespace DBProject
 		void addColumn(const std::string& name, Type::TypeName type, std::unique_ptr<Type> defaultValue);
 		void insertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData);
 
+		uint32_t getColumnIndex(const std::string& columnName) const;
 		std::string getColumnType(const std::string& columnName) const;
 		const std::unique_ptr<Column>& getColumn(const std::string& columnName) const;
 

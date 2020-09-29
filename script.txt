@@ -4,4 +4,11 @@ curl --data-binary @Donors.csv -H 'Expect:' -H 'Content-Type: text/csv' -X POST 
 curl -G http://localhost:8080/query --data-urlencode "sql=CREATE TABLE donors (ID INT, City STRING, State STRING, IsTeacher BOOL, Value INT);"
 curl -G http://localhost:8080/query --data-urlencode "sql=INSERT INTO donors (ID, City, State, IsTeacher, Value) VALUES (1, NewYork, NewYork, true, 100);"
 curl -G http://localhost:8080/query --data-urlencode "sql=SELECT * FROM donors;"
+curl -G http://localhost:8080/query --data-urlencode "sql=SELECT * FROM donors LIMIT 10000;"
 
+curl -G http://localhost:8080/query --data-urlencode "sql=SELECT * FROM donors WHERE ('Donor City' = 'San Francisco')"
+curl -G http://localhost:8080/query --data-urlencode "sql=SELECT * FROM donors WHERE ('Donor City' = 'San Francisco')"
+
+# building on linux
+cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug .
+make

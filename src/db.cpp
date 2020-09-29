@@ -117,7 +117,7 @@ namespace DBProject
 				auto resultTable = std::make_unique<Table>();
 				for (auto&& queryData : query->mQueryData)
 				{
-					if (queryData.colName == "ALL")
+					if (queryData.colName == "*")
 					{
 						for (auto&& column : columns)
 						{
@@ -145,23 +145,38 @@ namespace DBProject
 				std::vector<std::pair<std::string, size_t>> columnIndecesOrder;
 				for (auto&& newColumn : resultTable->getAllColumns())
 				{
-					auto indexIt = std::find_if(columns.begin(), columns.end(),
-						[colName = newColumn->name](const std::unique_ptr<Table::Column>& value)
-					{
-						return value->name == colName;
-					});
-
-					if (indexIt == columns.end())
+					uint32_t index = table->getColumnIndex(newColumn->name);
+					if (index == std::numeric_limits<uint32_t>::max())
 					{
 						continue;
 					}
 
-					size_t index = std::distance(columns.begin(), indexIt);
 					columnIndecesOrder.push_back(std::make_pair(newColumn->name, index));
 				}
 
+				uint32_t rowsProcessed = 0;
 				for (auto&& row : rows)
 				{
+					if (query->mSelectQueryInfo.hasConditions)
+					{
+						bool condition = true;
+						for (auto&& cond : query->mSelectQueryInfo.conditions)
+						{
+							uint32_t colIndex = table->getColumnIndex(cond.colName);
+							if (row[colIndex]->getValue() != cond.value)
+							{
+								condition = false;
+								break;
+							}
+						}
+
+						if (condition == false)
+						{
+							// skip row
+							continue;
+						}
+					}
+
 					for (auto& columnIndexPair : columnIndecesOrder)
 					{
 						insertionData.emplace_back(std::make_unique<Table::InsertionData>(
@@ -171,6 +186,10 @@ namespace DBProject
 					}
 
 					resultTable->insertRow(insertionData);
+					if (++rowsProcessed >= query->mSelectQueryInfo.rowsLimit)
+					{
+						break;
+					}
 				}
 
 				return resultTable;

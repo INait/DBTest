@@ -62,10 +62,10 @@ namespace DBProject
                     decodedUri = decodedUri.substr(equalSignIdx + 1);
                     decodeUriSpecialSymbols(decodedUri);
 
-                    auto queryResult = db.executeQuery(decodedUri);
-                    if (queryResult)
+                    auto queryResultTable = db.executeQuery(decodedUri);
+                    if (queryResultTable)
                     {
-                        result = queryResult->toString();
+                        result = queryResultTable->toString();
                     }
                 }
             }

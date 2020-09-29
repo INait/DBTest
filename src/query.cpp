@@ -76,7 +76,7 @@ namespace DBProject
 			{
 				if (it->str() == "*")
 				{
-					mQueryData.emplace_back(QueryData{ "ALL", "", "" });
+					mQueryData.emplace_back(QueryData{ "*", "", "" });
 				}
 				else
 				{
@@ -97,12 +97,65 @@ namespace DBProject
 
 			++it;
 
-			if (it != std::sregex_token_iterator{})
+			while (it != std::sregex_token_iterator{})
 			{
 				if (it->str() == "WHERE")
 				{
-					// TODO filters;
+					mSelectQueryInfo.hasConditions = true;
+
+					++it;
+					std::string colName = it->str();
+
+					++it;
+					// TODO: add <, >, <=, >=
+					if (it->str() != "=")
+					{
+						continue;
+					}
+
+					++it;
+					std::string colValue = it->str();
+					mSelectQueryInfo.conditions.emplace_back(SelectQueryInfo::Conditions{colName, colValue});
 				}
+				else if (it->str() == "GROUP")
+				{
+					mSelectQueryInfo.hasGroupBy = true;
+					++it;
+					if (it->str() == "BY")
+					{
+						++it;
+						mSelectQueryInfo.groupByIndex = atoi(it->str().c_str()) - 1;
+					}
+				}
+				else if (it->str() == "ORDER")
+				{
+					mSelectQueryInfo.hasOrderBy = true;
+					++it;
+					if (it->str() == "BY")
+					{
+						++it;
+						mSelectQueryInfo.orderByIndex = atoi(it->str().c_str()) - 1;
+
+						++it;
+						if (it->str() == "ASC")
+						{
+							mSelectQueryInfo.orderByDirection = SelectQueryInfo::OrderByDirection::Asc;
+						}
+						else if (it->str() == "DESC")
+						{
+							mSelectQueryInfo.orderByDirection = SelectQueryInfo::OrderByDirection::Desc;
+						}
+					}
+				}
+				else if (it->str() == "LIMIT")
+				{
+					mSelectQueryInfo.hasLimit = true;
+					++it;
+
+					mSelectQueryInfo.rowsLimit = atoi(it->str().c_str());
+				}
+
+				++it;
 			}
 		}
 		else if (mQueryCommand == Command::Delete)

@@ -120,6 +120,20 @@ void Table::insertRow(std::vector<std::unique_ptr<InsertionData>>& insertionData
 		}
 	}
 }
+
+uint32_t Table::getColumnIndex(const std::string& columnName) const
+{
+	for (uint32_t index = 0; index < mColumns.size(); index++)
+	{
+		if (mColumns[index]->name == columnName)
+		{
+			return index;
+		}
+	}
+
+	return std::numeric_limits<uint32_t>::max();
+}
+
 std::string Table::getColumnType(const std::string& columnName) const
 {
 	for (auto&& column : mColumns)
