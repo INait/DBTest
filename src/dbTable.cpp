@@ -147,19 +147,6 @@ std::string Table::getColumnType(const std::string& columnName) const
 	return getStringFromType(Type::TypeName::Void);
 }
 
-const std::unique_ptr<Table::Column>& Table::getColumn(const std::string& columnName) const
-{
-	for (auto&& column : mColumns)
-	{
-		if (column->name == columnName)
-		{
-			return column;
-		}
-	}
-
-	return nullptr;
-}
-
 std::string Table::toString() const
 {
 	std::stringstream ss;

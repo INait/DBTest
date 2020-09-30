@@ -60,7 +60,6 @@ namespace DBProject
 
 		uint32_t getColumnIndex(const std::string& columnName) const;
 		std::string getColumnType(const std::string& columnName) const;
-		const std::unique_ptr<Column>& getColumn(const std::string& columnName) const;
 
 		std::string toString() const;
 
